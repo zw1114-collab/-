@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حاسبة تخفيف الكلور</title>
+<style>
+:root{--bg:#f5f7fa;--card:#fff;--text:#1a2330;--muted:#5d6b7c;--accent:#0b6fd6;--accent-t:#fff;--line:#d9e0e8;--warn-bg:#fff4e0;--warn-t:#7a4a00;--ok-bg:#e8f3ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111820;--card:#1b2530;--text:#eaf0f6;--muted:#9aa9b9;--accent:#4aa3ff;--accent-t:#06121f;--line:#2c3a49;--warn-bg:#3a2d12;--warn-t:#ffd58a;--ok-bg:#16304d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
+main{max-width:480px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;margin:8px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+label{display:block;font-weight:600;margin-bottom:6px}
+input{width:100%;font-size:1.1rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.row{display:flex;gap:8px}.row>div{flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:6px 12px;font-size:.9rem;cursor:pointer}
+.chip:active{background:var(--accent);color:var(--accent-t)}
+.res{background:var(--ok-bg);border-radius:12px;padding:12px;margin-top:4px}
+.res .big{font-size:1.5rem;font-weight:700}
+.res p{margin:4px 0}
+.warn{background:var(--warn-bg);color:var(--warn-t);border-radius:12px;padding:10px 12px;font-size:.9rem}
+.err{color:#c0392b;font-weight:600}
+small{color:var(--muted)}
+.credit{text-align:center;margin:20px 0 8px;color:var(--muted);font-size:.85rem}
+.credit .name{font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:4px}
+</style>
+</head>
+<body>
+<main>
+<h1>حاسبة تخفيف الكلور</h1>
+
+<div class="card">
+<label for="src">تركيز الكلور المتاح (%)</label>
+<input id="src" type="text" inputmode="decimal" value="5" autocomplete="off">
+<div class="chips" data-target="src">
+<button class="chip" data-v="5">5%</button>
+<button class="chip" data-v="5.25">5.25%</button>
+<button class="chip" data-v="10">10%</button>
+<button class="chip" data-v="12">12%</button>
+</div>
+<small>5% = 50,000 جزء في المليون</small>
+</div>
+
+<div class="card">
+<label for="tgt">التركيز المطلوب (ppm)</label>
+<input id="tgt" type="text" inputmode="decimal" value="5000" autocomplete="off">
+<div class="chips" data-target="tgt">
+<button class="chip" data-v="150">150</button>
+<button class="chip" data-v="500">500</button>
+<button class="chip" data-v="1000">1000</button>
+<button class="chip" data-v="5000">5000</button>
+</div>
+<small>راجع التركيز المناسب لكل استخدام من سياسة مكافحة العدوى في مستشفاك.</small>
+</div>
+
+<div class="card">
+<label for="vol">الحجم النهائي المطلوب (لتر)</label>
+<input id="vol" type="text" inputmode="decimal" value="20" autocomplete="off">
+<div class="chips" data-target="vol">
+<button class="chip" data-v="1">1</button>
+<button class="chip" data-v="5">5</button>
+<button class="chip" data-v="10">10</button>
+<button class="chip" data-v="20">20</button>
+</div>
+</div>
+
+<div class="card">
+<label for="bot">حجم زجاجة الكلور (مل) <small>اختياري</small></label>
+<input id="bot" type="text" inputmode="decimal" value="1000" autocomplete="off">
+</div>
+
+<div class="res" id="out" aria-live="polite"></div>
+
+<div class="warn" style="margin-top:12px">
+المعادلة: C1 × V1 = C2 × V2. الكلور يضعف مع الوقت والحرارة والضوء، فالزجاجات القديمة أو المفتوحة من فترة تركيزها الفعلي أقل. لا تخلط الكلور بالأمونيا أو الأحماض، واستخدمه في مكان جيد التهوية مع قفازات. الأداة للمساعدة ولا تغني عن سياسة المستشفى.
+</div>
+<footer class="credit" dir="ltr">
+<div class="name">Made by : Zeyad Waleed Ghazzawi</div>
+<div>Bachelor of Science in Nursing, Fayoum University</div>
+<div>Master’s Researcher, Faculty of Nursing, Fayoum University</div>
+</footer>
+</main>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+function fmt(n){return (Math.round(n*100)/100).toLocaleString('en-US')}
+function num(id){
+  var s=$(id).value.replace(/[\u0660-\u0669]/g,function(d){return d.charCodeAt(0)-0x0660})
+    .replace(/[\u06F0-\u06F9]/g,function(d){return d.charCodeAt(0)-0x06F0})
+    .replace(/[\u066B\u066C,\u060C]/g,'.').replace(/\s/g,'');
+  return parseFloat(s);
+}
+function calc(){
+  var src=num('src')*10000;
+  var tgt=num('tgt');
+  var vol=num('vol');
+  var bot=num('bot');
+  var out=$('out');
+  if(!(src>0)||!(tgt>0)||!(vol>0)){out.innerHTML='<p>أدخل القيم لعرض النتيجة.</p>';return}
+  if(tgt>src){out.innerHTML='<p class="err">التركيز المطلوب أعلى من تركيز الكلور المتاح.</p>';return}
+  var cl=tgt*vol/src;
+  var water=vol-cl;
+  var html='<p>كلور: <span class="big">'+fmt(cl*1000)+' مل</span> ('+fmt(cl)+' لتر)</p>'
+   +'<p>ماء: <span class="big">'+fmt(water*1000)+' مل</span> ('+fmt(water)+' لتر)</p>'
+   +'<p>النسبة (كلور : ماء) = 1 : '+fmt(water/cl)+'</p>';
+  if(bot>0){html+='<p><small>يعادل '+fmt(cl*1000/bot)+' زجاجة</small></p>'}
+  html+='<p><small>كمل الماء حتى '+fmt(vol)+' لتر.</small></p>';
+  out.innerHTML=html;
+}
+['src','tgt','vol','bot'].forEach(function(i){$(i).addEventListener('input',calc)});
+document.querySelectorAll('.chips').forEach(function(g){
+  g.addEventListener('click',function(e){
+    var b=e.target.closest('.chip');if(!b)return;
+    $(g.dataset.target).value=b.dataset.v;calc();
+  });
+});
+calc();
+})();
+</script>
+</body>
+</html>
